@@ -5,23 +5,22 @@ class Node:
         self.prev = prev
 
 
-class linked_list:
+class doubly_linked_list:
     def __init__(self):
-        self.head = None
-        self.tail = None
+        self.head = self.tail = None
 
     def insert_at_begining(self, data):
         node = Node(data)
-        if self.head == None:
+        if self.head is None:
             self.head = self.tail = node
         else:
-            node.next = self.head
             self.head.prev = node
+            node.next = self.head
             self.head = node
 
     def insert_at_end(self, data):
         node = Node(data)
-        if self.tail is None:
+        if self.head is None:
             self.head = self.tail = node
         else:
             self.tail.next = node
@@ -34,147 +33,141 @@ class linked_list:
             self.insert_at_end(data)
 
     def insert_at(self, index, data):
-        if index < 0 or index > self.get_length():
+        dllength = self.get_length()
+        if index < 0 and index >= dllength:
             print("invalid index")
-            return
-
-        if index == 0:
+        elif index == 0:
             self.insert_at_begining(data)
-            return
-
-        if index == self.get_length():
+        elif index == dllength - 1:
             self.insert_at_end(data)
-            return
-
-        itr = self.head
-        count = 0
-        node = Node(data)
-        while itr:
-            if count == index - 1:
-                node.next = itr.next
-                node.prev = itr
-                if itr.next:
-                    itr.next.prev = node
-                itr.next = node
-                break
-            count += 1
-            itr = itr.next
+        else:
+            node = Node(data)
+            itr = self.head
+            count = 0
+            while itr:
+                if count == index - 1:
+                    node.next = itr.next
+                    node.prev = itr
+                    if itr.next:
+                        itr.next.prev = node
+                    itr.next = node
+                    break
+                count += 1
+                itr = itr.next
 
     def insert_after_value(self, data_after, data_to_insert):
         if self.head is None:
-            print("the list is empty unable to insert")
-
-        itr = self.head
-        node = Node(data_to_insert)
-        while itr:
-            if itr.data == data_after:
-                node.next = itr.next
-                node.prev = itr
-                if itr.next:
-                    itr.next.prev = node
-                itr.next = node
-                break
-            itr = itr.next
-
-        print("unable to find data_after")
+            print("doubly linked list is empty")
+        else:
+            itr = self.head
+            count = 0
+            while itr:
+                if itr.data == data_after:
+                    self.insert_at(count + 1, data_to_insert)
+                    break
+                count += 1
+                itr = itr.next
 
     def remove_at_begining(self):
-        if self.head is not None:
-            self.head = self.head.next
-            self.head.prev = None
-            return
+        if self.head is None:
+            print("doubly linked list is empty")
         else:
-            print("linked list is empty")
+            itr = self.head.next
+            itr.prev = None
+            self.head = itr
 
     def remove_at_end(self):
-        itr = self.tail.prev
-        itr.next = None
-        self.tail = itr
+        if self.tail is None:
+            print("doubly linked list is empty")
+        else:
+            itr = self.tail.prev
+            itr.next = None
+            self.tail = itr
 
     def remove_at(self, index):
-        if index < 0 or index > self.get_length():
+        dllength = self.get_length()
+        if index < 0 or index >= dllength:
             print("invalid index")
-            return
-
-        if self.head == None:
-            print("linked list is empty")
-            return
-
-        if index == 0:
+        elif index == 0:
             self.remove_at_begining()
             return
-
-        itr = self.head
-        count = 0
-        while itr:
-            if count == index - 1:
-                itr.next.prev = itr
-                itr.next = itr.next.next
-                return
-            count += 1
-            itr = itr.next
+        elif index == dllength - 1:
+            self.remove_at_end()
+            return
+        else:
+            itr = self.head
+            count = 0
+            while itr:
+                if count == index - 1:
+                    itr.next = itr.next.next
+                    itr.next.prev = itr
+                    break
+                count += 1
+                itr = itr.next
 
     def remove_by_value(self, data):
-        count = 0
-        itr = self.head
-        while itr:
-            if itr.data == data:
-                self.remove_at(count)
-                break
-            count += 1
-            itr = itr.next
+        if self.head is None:
+            print("doubly linked list is empty")
+        else:
+            itr = self.head
+            count = 0
+            while itr:
+                if itr.data == data:
+                    self.remove_at(count - 1)
+                    break
+                count += 1
+                itr = itr.next
 
     def get_length(self):
-        count = 0
-        itr = self.head
-        while itr:
-            count += 1
-            itr = itr.next
-        return count
+        if self.head is None:
+            print("doubly linked list is empty")
+        else:
+            itr = self.head
+            count = 0
+            while itr:
+                count += 1
+                itr = itr.next
+            return count
 
     def print_forward(self):
         if self.head is None:
-            print("linked list is empty")
-            return
+            print("doubly linked list is empty")
 
-        itr = self.head
-        llist = ""
-        while itr:
-            llist += str(itr.data) + "-->"
-            itr = itr.next
-        print(llist)
+        else:
+            itr = self.head
+            dllist = ""
+            while itr:
+                dllist += str(itr.data) + "-->"
+                itr = itr.next
+            print(dllist)
 
     def print_backward(self):
         if self.tail is None:
-            print("linked list is empty")
-            return
+            print("doubly linked list is empty")
 
-        itr = self.tail
-        llist = ""
-        while itr:
-            llist += str(itr.data) + "<--"
-            itr = itr.prev
-        print(llist)
+        else:
+            itr = self.tail
+            dllist = ""
+            while itr:
+                dllist += str(itr.data) + "<--"
+                itr = itr.prev
+            print(dllist)
 
 
 if __name__ == "__main__":
     pass
-    llist = linked_list()
-    # llist.insert_at_begining(20)
-    # llist.insert_at_end(40)
-    # llist.insert_at_end(30)
-    llist.insert_values(["banana", "mango", "grapes", "orange"])
-    print(llist.get_length())
-    llist.insert_at(2, "kiwi")
-    # llist.print()
-    llist.insert_after_value("kiwi", "strawberry")
-    llist.remove_at_begining()
-    llist.remove_at_end()
-    # llist.remove_at(1)
-    # llist.remove_by_value("grapes")
-    llist.print_forward()
-    llist.print_backward()
-    # llist.print()
-    # llist.print()
-    # llist.print()
-    # llist.print()
+    dllist = doubly_linked_list()
+    # dllist.insert_at_begining(20)
+    # dllist.insert_at_begining(40)
+    # dllist.insert_at_end(20)
+    # dllist.insert_at_end(40)
+    dllist.insert_values(["banana", "mango", "grapes", "orange"])
+    print(dllist.get_length())
+    dllist.insert_at(2, "kiwi")
+    dllist.insert_after_value("kiwi", "strawberry")
+    dllist.remove_at_begining()
+    dllist.remove_at_end()
+    dllist.remove_at(1)
+    dllist.remove_by_value("grapes")
+    dllist.print_forward()
+    dllist.print_backward()
