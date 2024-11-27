@@ -9,14 +9,25 @@ class hash_table:
             h += ord(char)
         return h % self.MAX
 
-    def add_item(self, key):
+    def __setitem__(self, key, val):
         h = self.get_hash(key)
-        self.arr[h] = key
+        self.arr[h] = val
+
+    def __getitem__(self, key):
+        h = self.get_hash(key)
+        return self.arr[h]
+
+    def __delitem__(self, key):
+        h = self.get_hash(key)
+        self.arr[h] = None
 
 
 if __name__ == "__main__":
     pass
     htable = hash_table()
-    htable.add_item("hello")
-    htable.add_item("world")
+    htable["world"] = 100
+    htable["world1"] = 130
     print(htable.arr)
+    del htable["world"]
+    print(htable.arr)
+    print(htable["world1"])
