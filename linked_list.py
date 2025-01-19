@@ -1,39 +1,26 @@
 class Node:
     def __init__(self, data=None, next=None):
-        self.data = data
         self.next = next
+        self.data = data
 
 
-class linked_list:
+class linkedList:
     def __init__(self):
         self.head = None
 
     def insert_at_begining(self, data):
-        node = Node(data, self.head)
-        self.head = node
-
-    def insert_at_end(self, data):
-        if self.head is None:
-            node = Node(data, self.head)
-            self.head = node
+        if self.head == None:
+            self.head = Node(data)
             return
 
-        itr = self.head
-        while itr.next:
-            itr = itr.next
-        itr.next = Node(data, None)
-
-    def insert_values(self, data_list):
-        self.head = None
-        for data in data_list:
-            self.insert_at_end(data)
+        self.head = Node(data, self.head)
 
     def insert_at(self, index, data):
         if index < 0 or index > self.get_length():
             print("invalid index")
             return
 
-        if index == 0:
+        if self.head is None:
             self.insert_at_begining(data)
             return
 
@@ -41,53 +28,45 @@ class linked_list:
         count = 0
         while itr:
             if count == index - 1:
-                node = Node(data, itr.next)
-                itr.next = node
+                itr.next = Node(data, itr.next)
+                return
             count += 1
             itr = itr.next
 
-    def insert_after_value(self, data_after, data_to_insert):
+    def insert_at_end(self, data):
+        self.insert_at(self.get_length(), data)
+
+    def insert_values(self, data_list):
+        self.head = None
+        for data in data_list:
+            self.insert_at_end(data)
+
+    def insert_after_value(self, ref_data, new_data):
         if self.head is None:
-            print("the list is empty unable to insert")
+            print("list is empty")
+            return
 
-        itr = self.head
-        while itr:
-            if itr.data == data_after:
-                itr.next = Node(data_to_insert, itr.next)
-                return
-            itr = itr.next
+        if self.find_index(ref_data) == -1:
+            print("data not found")
+            return
 
-        print("unable to find data_after")
+        self.insert_at(self.find_index(ref_data) + 1, new_data)
 
     def remove_at_begining(self):
-        if self.head is not None:
-            self.head = self.head.next
+        if self.head is None:
+            print("list is empty")
             return
-        else:
-            print("linked list is empty")
 
-    def remove_at_end(self):
-        llist_length = self.get_length() - 2
         itr = self.head
-        count = 0
-        while itr:
-            if count == llist_length:
-                itr.next = None
-                return
-            count += 1
-            itr = itr.next
+        self.head = itr.next
 
     def remove_at(self, index):
         if index < 0 or index > self.get_length():
             print("invalid index")
             return
 
-        if self.head == None:
-            print("linked list is empty")
-            return
-
-        if index == 0:
-            self.remove_at_begining()
+        if self.head is None:
+            print("the list is empty")
             return
 
         itr = self.head
@@ -96,30 +75,53 @@ class linked_list:
             if count == index - 1:
                 itr.next = itr.next.next
                 return
-            count += 1
             itr = itr.next
+            count += 1
 
-    def remove_by_value(self, data):
-        count = 0
-        itr = self.head
-        while itr:
-            if itr.data == data:
-                self.remove_at(count)
-                break
-            count += 1
-            itr = itr.next
+    def remove_at_end(self):
+        if self.head is None:
+            print("list is empty")
+            return
+
+        self.remove_at(self.get_length() - 1)
+
+    def remove_by_value(self, value):
+        if self.head is None:
+            print("list is empty")
+            return
+
+        if self.find_index(value) == -1:
+            print("data not found")
+            return
+
+        self.remove_at(self.find_index(value))
 
     def get_length(self):
-        count = 0
+
         itr = self.head
+        count = 0
         while itr:
-            count += 1
             itr = itr.next
+            count += 1
         return count
 
-    def print(self):
+    def find_index(self, data):
         if self.head is None:
-            print("linked list is empty")
+            print("the list is empty")
+            return
+
+        itr = self.head
+        count = 0
+        while itr:
+            if data == itr.data:
+                return count
+            itr = itr.next
+            count += 1
+        return -1
+
+    def print_list(self):
+        if self.head == None:
+            print("the list is empty")
             return
 
         itr = self.head
@@ -130,23 +132,18 @@ class linked_list:
         print(llist)
 
 
-if __name__ == "__main__":
-    pass
-    llist = linked_list()
-    # llist.insert_at_begining(10)
-    # llist.insert_at_end(30)
-    llist.insert_values(["banana", "mango", "grapes", "orange"])
-    llist.print()
-    # print(llist.get_length())
-    # llist.insert_at(4, "kiwi")
-    # llist.print()
-    # llist.insert_after_value("kiwi", "strawberry")
-    # llist.print()
-    # llist.remove_at_begining()
-    # llist.print()
-    # llist.remove_at_end()
-    # llist.print()
-    # llist.remove_at(1)
-    # llist.print()
-    llist.remove_by_value("orange")
-    llist.print()
+llist = linkedList()
+# llist.insert_at_begining(10)
+# llist.insert_at_begining(20)
+# llist.insert_at_begining(30)
+# llist.insert_at(1, 40)
+# llist.insert_at_end(50)
+# llist.remove_at_begining()
+# llist.remove_at(2)
+llist.insert_values([100, 200, 300, 400, 500])
+llist.remove_at_end()
+llist.remove_at_begining()
+llist.remove_at(1)
+llist.insert_after_value(200, 300)
+llist.remove_at_begining()
+llist.print_list()
