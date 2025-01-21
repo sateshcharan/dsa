@@ -1,74 +1,59 @@
 class Node:
-    def __init__(self, data=None, next=None):
-        self.next = next
+    def __init__ (self, data=None, next=None):
         self.data = data
+        self.next = next
 
-
-class linkedList:
-    def __init__(self):
+class LinkedList:
+    def __init__ (self):
         self.head = None
 
     def insert_at_begining(self, data):
-        if self.head == None:
-            self.head = Node(data)
-            return
-
         self.head = Node(data, self.head)
 
     def insert_at(self, index, data):
         if index < 0 or index > self.get_length():
             print("invalid index")
             return
-
         if self.head is None:
             self.insert_at_begining(data)
             return
-
         itr = self.head
         count = 0
         while itr:
-            if count == index - 1:
+            if count == index -1:
                 itr.next = Node(data, itr.next)
                 return
-            count += 1
             itr = itr.next
+            count += 1
 
     def insert_at_end(self, data):
-        self.insert_at(self.get_length(), data)
+        index = self.get_length()
+        self.insert_at(index, data)
+
+    def insert_after_value(self, data_after, data_to_insert):
+        if self.head is None:
+            print("the list is empty cannot insert after value")
+            return
+        index = self.get_index(data_after) + 1
+        self.insert_at(index, data_to_insert)
 
     def insert_values(self, data_list):
         self.head = None
         for data in data_list:
             self.insert_at_end(data)
 
-    def insert_after_value(self, ref_data, new_data):
-        if self.head is None:
-            print("list is empty")
-            return
-
-        if self.find_index(ref_data) == -1:
-            print("data not found")
-            return
-
-        self.insert_at(self.find_index(ref_data) + 1, new_data)
-
     def remove_at_begining(self):
         if self.head is None:
-            print("list is empty")
+            print("the list is empty cannot remove at begining")
             return
-
-        itr = self.head
-        self.head = itr.next
+        self.head = self.head.next
 
     def remove_at(self, index):
         if index < 0 or index > self.get_length():
-            print("invalid index")
-            return
-
+            print("invalid index cannot remove")
         if self.head is None:
-            print("the list is empty")
+            print("the list is empty cannot remove at index")
             return
-
         itr = self.head
         count = 0
         while itr:
@@ -79,25 +64,31 @@ class linkedList:
             count += 1
 
     def remove_at_end(self):
-        if self.head is None:
-            print("list is empty")
-            return
-
-        self.remove_at(self.get_length() - 1)
+        index = self.get_length() - 1
+        self.remove_at(index)
 
     def remove_by_value(self, value):
+        index = self.get_index(value)
+        if index < 0:
+            print("invalid value")
+            return
+        self.remove_at(index)
+
+    def get_index(self, value):
         if self.head is None:
-            print("list is empty")
+            print('the list is empty cannot get index')
             return
-
-        if self.find_index(value) == -1:
-            print("data not found")
-            return
-
-        self.remove_at(self.find_index(value))
+        itr = self.head
+        count = 0
+        while itr:
+            if itr.data == value:
+                return count
+            itr = itr.next
+            count += 1
 
     def get_length(self):
-
+        if self.head is None:
+            return 0
         itr = self.head
         count = 0
         while itr:
@@ -105,45 +96,27 @@ class linkedList:
             count += 1
         return count
 
-    def find_index(self, data):
-        if self.head is None:
-            print("the list is empty")
-            return
-
-        itr = self.head
-        count = 0
-        while itr:
-            if data == itr.data:
-                return count
-            itr = itr.next
-            count += 1
-        return -1
-
     def print_list(self):
-        if self.head == None:
-            print("the list is empty")
+        if self.head is None:
+            print("the list is empty cannot print list")
             return
-
         itr = self.head
-        llist = ""
+        lst = ""
         while itr:
-            llist += str(itr.data) + "-->"
-            itr = itr.next
-        print(llist)
+            lst += str(itr.data) + "-->"
+            itr = itr.next        
+        print(lst)          
 
-
-llist = linkedList()
-# llist.insert_at_begining(10)
-# llist.insert_at_begining(20)
-# llist.insert_at_begining(30)
-# llist.insert_at(1, 40)
-# llist.insert_at_end(50)
-# llist.remove_at_begining()
-# llist.remove_at(2)
-llist.insert_values([100, 200, 300, 400, 500])
+llist = LinkedList()
+llist.insert_at_begining(100)
+llist.insert_at_begining(200)
+llist.insert_at_begining(300)
+llist.insert_at(0, 400)
+llist.insert_at_end(500)
+llist.insert_values([100,200,300,400,500])
+llist.insert_after_value(300, 30)
+llist.remove_at_begining()
+llist.remove_at(2)
 llist.remove_at_end()
-llist.remove_at_begining()
-llist.remove_at(1)
-llist.insert_after_value(200, 300)
-llist.remove_at_begining()
+llist.remove_by_value(300)
 llist.print_list()
