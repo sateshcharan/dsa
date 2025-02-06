@@ -20,7 +20,7 @@ class queue:
         return len(self.buffer)
 
 if __name__ == "__main__":
-    q = queue()
+    q = Queue()
     q.enqueue('1')
     q.enqueue('2')
     q.enqueue('3')
